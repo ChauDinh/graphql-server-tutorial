@@ -6,10 +6,12 @@ var _cors = _interopRequireDefault(require("cors"));
 
 var _apolloServerExpress = require("apollo-server-express");
 
+var _v = _interopRequireDefault(require("uuid/v4"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
 function _templateObject() {
-  var data = _taggedTemplateLiteral(["\n  type Query {\n    me: User\n    user(id: ID!): User\n    users: [User!]\n\n    message(id: ID!): Message!\n    messages: [Message!]!\n\n    onlineUsers: [User!]!\n  }\n\n  type User {\n    id: ID!\n    username: String!\n    messages: [Message!]\n  }\n\n  type Message {\n    id: ID!\n    text: String!\n    user: User!\n  }\n"]);
+  var data = _taggedTemplateLiteral(["\n  type Query {\n    me: User\n    user(id: ID!): User\n    users: [User!]\n\n    message(id: ID!): Message!\n    messages: [Message!]!\n\n    onlineUsers: [User!]!\n  }\n\n  type User {\n    id: ID!\n    username: String!\n    messages: [Message!]\n  }\n\n  type Message {\n    id: ID!\n    text: String!\n    user: User!\n  }\n\n  type Mutation {\n    createMessage(text: String!): Message!\n  }\n"]);
 
   _templateObject = function _templateObject() {
     return data;
@@ -106,6 +108,19 @@ var resolvers = {
       return Object.values(_messages).filter(function (m) {
         return m.userId === user.id;
       });
+    }
+  },
+  Mutation: {
+    createMessage: function createMessage(parent, _ref5, _ref6) {
+      var text = _ref5.text;
+      var me = _ref6.me;
+      var id = (0, _v["default"])();
+      var message = {
+        id: id,
+        text: text,
+        userId: me.id
+      };
+      return message;
     }
   }
 };
