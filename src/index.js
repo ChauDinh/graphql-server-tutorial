@@ -6,13 +6,13 @@ import uuidv4 from "uuid/v4";
 let users = {
   1: {
     id: "1",
-    username: "Jascha Heifetz"
-    // messageIds: [1]
+    username: "Jascha Heifetz",
+    messageIds: [1]
   },
   2: {
     id: "2",
-    username: "David Oistrakh"
-    // messageIds: [2]
+    username: "David Oistrakh",
+    messageIds: [2]
   }
 };
 
@@ -78,6 +78,7 @@ const schema = gql`
 
   type Mutation {
     createMessage(text: String!): Message!
+    deleteMessage(id: ID!): Boolean!
   }
 `;
 
@@ -131,7 +132,22 @@ const resolvers = {
         userId: me.id
       };
 
+      messages[id] = message;
+      users[me.id].messageIds.push(id);
+
       return message;
+    },
+
+    deleteMessage: (parent, { id }) => {
+      // Destructoring to find message by id from the messages object.
+      const { [id]: message, ...otherMessages } = messages;
+
+      if (!message) {
+        return false;
+      }
+
+      messages = otherMessages;
+      return true;
     }
   }
 };

@@ -10,8 +10,18 @@ var _v = _interopRequireDefault(require("uuid/v4"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = _objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
+
+function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
+
+function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return _typeof(key) === "symbol" ? key : String(key); }
+
+function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (_typeof(res) !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
+
 function _templateObject() {
-  var data = _taggedTemplateLiteral(["\n  type Query {\n    me: User\n    user(id: ID!): User\n    users: [User!]\n\n    message(id: ID!): Message!\n    messages: [Message!]!\n\n    onlineUsers: [User!]!\n  }\n\n  type User {\n    id: ID!\n    username: String!\n    messages: [Message!]\n  }\n\n  type Message {\n    id: ID!\n    text: String!\n    user: User!\n  }\n\n  type Mutation {\n    createMessage(text: String!): Message!\n  }\n"]);
+  var data = _taggedTemplateLiteral(["\n  type Query {\n    me: User\n    user(id: ID!): User\n    users: [User!]\n\n    message(id: ID!): Message!\n    messages: [Message!]!\n\n    onlineUsers: [User!]!\n  }\n\n  type User {\n    id: ID!\n    username: String!\n    messages: [Message!]\n  }\n\n  type Message {\n    id: ID!\n    text: String!\n    user: User!\n  }\n\n  type Mutation {\n    createMessage(text: String!): Message!\n    deleteMessage(id: ID!): Boolean!\n  }\n"]);
 
   _templateObject = function _templateObject() {
     return data;
@@ -25,13 +35,13 @@ function _taggedTemplateLiteral(strings, raw) { if (!raw) { raw = strings.slice(
 var _users = {
   1: {
     id: "1",
-    username: "Jascha Heifetz" // messageIds: [1]
-
+    username: "Jascha Heifetz",
+    messageIds: [1]
   },
   2: {
     id: "2",
-    username: "David Oistrakh" // messageIds: [2]
-
+    username: "David Oistrakh",
+    messageIds: [2]
   }
 };
 var _messages = {
@@ -120,7 +130,26 @@ var resolvers = {
         text: text,
         userId: me.id
       };
+      _messages[id] = message;
+
+      _users[me.id].messageIds.push(id);
+
       return message;
+    },
+    deleteMessage: function deleteMessage(parent, _ref7) {
+      var id = _ref7.id;
+
+      // Destructoring to find message by id from the messages object.
+      var _messages2 = _messages,
+          message = _messages2[id],
+          otherMessages = _objectWithoutProperties(_messages2, [id].map(_toPropertyKey));
+
+      if (!message) {
+        return false;
+      }
+
+      _messages = otherMessages;
+      return true;
     }
   }
 };
