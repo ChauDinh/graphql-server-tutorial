@@ -13,8 +13,6 @@ let users = {
   }
 };
 
-const me = users[1];
-
 const app = express();
 
 app.use(cors());
@@ -42,7 +40,7 @@ const schema = gql`
  */
 const resolvers = {
   Query: {
-    me: () => {
+    me: (parent, args, { me }) => {
       return me;
     },
     user: (parent, { id }) => {
@@ -56,7 +54,10 @@ const resolvers = {
 
 const server = new ApolloServer({
   typeDefs: schema,
-  resolvers
+  resolvers,
+  context: {
+    me: users[1]
+  }
 });
 
 server.applyMiddleware({ app, path: "/graphql" });

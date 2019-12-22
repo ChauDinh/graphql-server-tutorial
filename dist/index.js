@@ -30,7 +30,6 @@ var _users = {
     username: "David Oistrakh"
   }
 };
-var _me = _users[1];
 var app = (0, _express["default"])();
 app.use((0, _cors["default"])());
 /**
@@ -46,11 +45,12 @@ var schema = (0, _apolloServerExpress.gql)(_templateObject());
 
 var resolvers = {
   Query: {
-    me: function me() {
+    me: function me(parent, args, _ref) {
+      var _me = _ref.me;
       return _me;
     },
-    user: function user(parent, _ref) {
-      var id = _ref.id;
+    user: function user(parent, _ref2) {
+      var id = _ref2.id;
       return _users[id];
     },
     users: function users() {
@@ -60,7 +60,10 @@ var resolvers = {
 };
 var server = new _apolloServerExpress.ApolloServer({
   typeDefs: schema,
-  resolvers: resolvers
+  resolvers: resolvers,
+  context: {
+    me: _users[1]
+  }
 });
 server.applyMiddleware({
   app: app,
