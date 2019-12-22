@@ -9,7 +9,7 @@ var _apolloServerExpress = require("apollo-server-express");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
 function _templateObject() {
-  var data = _taggedTemplateLiteral(["\n  type Query {\n    me: User\n    user(id: ID!): User\n    users: [User!]\n  }\n\n  type User {\n    id: ID!\n    username: String!\n  }\n"]);
+  var data = _taggedTemplateLiteral(["\n  type Query {\n    me: User\n    user(id: ID!): User\n    users: [User!]\n\n    message(id: ID!): Message!\n    messages: [Message!]!\n\n    onlineUsers: [User!]!\n  }\n\n  type User {\n    id: ID!\n    username: String!\n    messages: [Message!]\n  }\n\n  type Message {\n    id: ID!\n    text: String!\n    user: User!\n  }\n"]);
 
   _templateObject = function _templateObject() {
     return data;
@@ -23,11 +23,39 @@ function _taggedTemplateLiteral(strings, raw) { if (!raw) { raw = strings.slice(
 var _users = {
   1: {
     id: "1",
-    username: "Jascha Heifetz"
+    username: "Jascha Heifetz" // messageIds: [1]
+
   },
   2: {
     id: "2",
-    username: "David Oistrakh"
+    username: "David Oistrakh" // messageIds: [2]
+
+  }
+};
+var _messages = {
+  1: {
+    id: "1",
+    text: "Hello, world!",
+    userId: "1"
+  },
+  2: {
+    id: "2",
+    text: "Bye world!",
+    userId: "2"
+  }
+};
+var onlineUsers = {
+  1: {
+    id: "1",
+    username: "A"
+  },
+  2: {
+    id: "2",
+    username: "B"
+  },
+  3: {
+    id: "3",
+    username: "C"
   }
 };
 var app = (0, _express["default"])();
@@ -55,6 +83,29 @@ var resolvers = {
     },
     users: function users() {
       return Object.values(_users);
+    },
+    message: function message(parent, _ref3) {
+      var id = _ref3.id;
+      return _messages[id];
+    },
+    messages: function messages() {
+      return Object.values(_messages);
+    },
+    onlineUsers: function onlineUsers(parent, args, _ref4) {
+      var _onlineUsers = _ref4.onlineUsers;
+      return Object.values(_onlineUsers);
+    }
+  },
+  Message: {
+    user: function user(message) {
+      return _users[message.userId];
+    }
+  },
+  User: {
+    messages: function messages(user) {
+      return Object.values(_messages).filter(function (m) {
+        return m.userId === user.id;
+      });
     }
   }
 };
@@ -62,7 +113,8 @@ var server = new _apolloServerExpress.ApolloServer({
   typeDefs: schema,
   resolvers: resolvers,
   context: {
-    me: _users[1]
+    me: _users[1],
+    onlineUsers: onlineUsers
   }
 });
 server.applyMiddleware({
