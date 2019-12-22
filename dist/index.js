@@ -21,7 +21,7 @@ function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return _ty
 function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (_typeof(res) !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
 
 function _templateObject() {
-  var data = _taggedTemplateLiteral(["\n  type Query {\n    me: User\n    user(id: ID!): User\n    users: [User!]\n\n    message(id: ID!): Message!\n    messages: [Message!]!\n\n    onlineUsers: [User!]!\n  }\n\n  type User {\n    id: ID!\n    username: String!\n    messages: [Message!]\n  }\n\n  type Message {\n    id: ID!\n    text: String!\n    user: User!\n  }\n\n  type Mutation {\n    createMessage(text: String!): Message!\n    deleteMessage(id: ID!): Boolean!\n  }\n"]);
+  var data = _taggedTemplateLiteral(["\n  type Query {\n    me: User\n    user(id: ID!): User\n    users: [User!]\n\n    message(id: ID!): Message!\n    messages: [Message!]!\n\n    onlineUsers: [User!]!\n  }\n\n  type User {\n    id: ID!\n    username: String!\n    messages: [Message!]\n  }\n\n  type Message {\n    id: ID!\n    text: String!\n    user: User!\n  }\n\n  type Mutation {\n    createMessage(text: String!): Message!\n    deleteMessage(id: ID!): Boolean!\n    updateMessage(id: ID!, text: String!): Boolean!\n  }\n"]);
 
   _templateObject = function _templateObject() {
     return data;
@@ -149,6 +149,22 @@ var resolvers = {
       }
 
       _messages = otherMessages;
+      return true;
+    },
+    updateMessage: function updateMessage(parent, _ref8, _ref9) {
+      var id = _ref8.id,
+          text = _ref8.text;
+      var me = _ref9.me;
+
+      var _messages3 = _messages,
+          message = _messages3[id],
+          otherMessages = _objectWithoutProperties(_messages3, [id].map(_toPropertyKey));
+
+      if (!message) {
+        return false;
+      }
+
+      message.text = text;
       return true;
     }
   }
