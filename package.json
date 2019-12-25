@@ -5,23 +5,25 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "babel src/index.js --watch -d dist",
-    "start": "nodemon dist/index.js"
+    "start": "nodemon --exec babel-node src/index.js"
+  },
+  "engines": {
+    "node": "12.14.0"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "apollo-server": "^2.9.13",
-    "apollo-server-express": "^2.9.13",
+    "apollo-server": "^2.6.1",
+    "apollo-server-express": "^2.6.1",
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "graphql": "^14.5.8",
     "uuid": "^3.3.3"
   },
   "devDependencies": {
-    "@babel/cli": "^7.7.7",
     "@babel/core": "^7.7.7",
+    "@babel/node": "^7.7.7",
     "@babel/preset-env": "^7.7.7",
     "nodemon": "^2.0.2"
   }
