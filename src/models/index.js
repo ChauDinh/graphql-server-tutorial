@@ -1,46 +1,13 @@
-let users = {
-  1: {
-    id: "1",
-    username: "Jascha Heifetz",
-    messageIds: [1]
-  },
-  2: {
-    id: "2",
-    username: "David Oistrakh",
-    messageIds: [2]
-  }
-};
+import Sequelize from "sequelize";
+import "dotenv/config";
 
-let messages = {
-  1: {
-    id: "1",
-    text: "Hello, world!",
-    userId: "1"
-  },
-  2: {
-    id: "2",
-    text: "Bye world!",
-    userId: "2"
+const sequelize = new Sequelize(
+  process.env.DATABASE,
+  process.env.DATABASE_USER,
+  process.env.DATABASE_PASSWORD,
+  {
+    dialect: "postgres"
   }
-};
+);
 
-let onlineUsers = {
-  1: {
-    id: "1",
-    username: "A"
-  },
-  2: {
-    id: "2",
-    username: "B"
-  },
-  3: {
-    id: "3",
-    username: "C"
-  }
-};
-
-export default {
-  users,
-  messages,
-  onlineUsers
-};
+export { sequelize };
