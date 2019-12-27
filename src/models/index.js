@@ -1,46 +1,25 @@
-let users = {
-  1: {
-    id: "1",
-    username: "Jascha Heifetz",
-    messageIds: [1]
-  },
-  2: {
-    id: "2",
-    username: "David Oistrakh",
-    messageIds: [2]
+import Sequelize from "sequelize";
+import "dotenv/config";
+
+const sequelize = new Sequelize(
+  process.env.DATABASE,
+  process.env.DATABASE_USER,
+  process.env.DATABASE_PASSWORD,
+  {
+    dialect: "postgres"
   }
+);
+
+const models = {
+  User: sequelize.import("./user"),
+  Message: sequelize.import("./message")
 };
 
-let messages = {
-  1: {
-    id: "1",
-    text: "Hello, world!",
-    userId: "1"
-  },
-  2: {
-    id: "2",
-    text: "Bye world!",
-    userId: "2"
+Object.keys(models).forEach(key => {
+  if ("associate" in models[key]) {
+    models[key].associate(models);
   }
-};
+});
 
-let onlineUsers = {
-  1: {
-    id: "1",
-    username: "A"
-  },
-  2: {
-    id: "2",
-    username: "B"
-  },
-  3: {
-    id: "3",
-    username: "C"
-  }
-};
-
-export default {
-  users,
-  messages,
-  onlineUsers
-};
+export { sequelize };
+export default models;
