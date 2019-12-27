@@ -35,3 +35,12 @@ const user = (sequelize, DataTypes) => {
 ```
 
 The message model looks like similar. You can check both in the paths `./src/models/user.js` and `./src/models/message.js`.
+
+# Connecting Resolvers and Database
+
+What we will cover?
+
+- Use the new models in GraphQL resolvers
+- Seed your database with data when the application start
+- Add a user model method for retrieving a user by username
+- Learn essentials about psql command line.

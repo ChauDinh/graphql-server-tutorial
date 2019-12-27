@@ -1,13 +1,13 @@
 export default {
   Query: {
-    me: (parent, args, { me }) => {
-      return me;
+    me: async (parent, args, { models, me }) => {
+      return await models.User.findById(me.id);
     },
-    user: (parent, { id }, { models }) => {
-      return models.users[id];
+    user: async (parent, { id }, { models }) => {
+      return await models.User.findById(id);
     },
-    users: () => {
-      return Object.values(models.users);
+    users: async (parent, args, { models }) => {
+      return await models.User.findAll();
     },
 
     onlineUsers: (parent, args, { models }) => {
@@ -16,8 +16,12 @@ export default {
   },
 
   User: {
-    messages: (user, args, { models }) => {
-      return Object.values(models.messages).filter(m => m.userId === user.id);
+    messages: async (user, args, { models }) => {
+      return await models.Message.findAll({
+        where: {
+          userId: user.id
+        }
+      });
     }
   }
 };
