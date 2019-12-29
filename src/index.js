@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
 import { ApolloServer } from "apollo-server-express";
+import "dotenv/config";
 
 import schema from "./schema";
 import resolvers from "./resolvers";
@@ -15,7 +16,8 @@ const server = new ApolloServer({
   resolvers,
   context: async () => ({
     models,
-    me: await models.User.findByLogin("admin")
+    me: await models.User.findByLogin("admin"),
+    secret: process.env.SECRET
   }),
   formatError: error => {
     // remove the internal sequelize error message
@@ -51,6 +53,8 @@ const createUserWithMessage = async () => {
   await models.User.create(
     {
       username: "admin",
+      email: "hello@robin.com",
+      password: "123123",
       messages: [
         {
           text: "Just erase database"
@@ -63,6 +67,8 @@ const createUserWithMessage = async () => {
   await models.User.create(
     {
       username: "guess",
+      email: "hello@guess.com",
+      password: "321321",
       messages: [{ text: "Hello, world!" }]
     },
     { include: [models.Message] }
