@@ -74,6 +74,7 @@ const createUserWithMessage = async () => {
       username: "admin",
       email: "hello@robin.com",
       password: "123123",
+      role: "ADMIN",
       messages: [
         {
           text: "Just erase database"
