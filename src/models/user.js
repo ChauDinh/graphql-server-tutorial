@@ -27,6 +27,9 @@ const user = (sequelize, DataTypes) => {
         notEmpty: true,
         len: [6, 42]
       }
+    },
+    role: {
+      type: DataTypes.STRING
     }
   });
 
