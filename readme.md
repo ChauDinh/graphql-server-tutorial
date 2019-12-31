@@ -46,3 +46,17 @@ What we will cover?
 - Learn essentials about psql command line.
 
 # Setting Headers for graphql playground
+
+# Offset/limit pagination
+
+The offset based pagination isn't too difficult to implement. The limit states how many items you want to retrieve from the entire list, and the offset states where to begin in the whole list.
+
+The disadvantages of offset/limit pagination is when offset becomes very long, the database query takes longer, leading to a poor client-side performance. In addition, when an item deleted, offset/limit pagination cannot handle this. For instance, if you query the first page of messages and someone deletes a message, the offset/limit would be wrong on the next page since the item count is off by one.
+
+# Cursor-based pagination
+
+We can avoid these disadvantages of offset/limit in cursor pagination.
+
+The cursor-based pagination implements an identifier called cursor rather counting items like offset/limit. The cursor can be used to express "give me a limit of X items from cursor Y".
+
+In this tutorial, the approach is to use dates (eg. the creation date entity in database) to identify an item in the list.
