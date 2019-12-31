@@ -5,7 +5,7 @@ import { isAuthenticated, isMessageOwner } from "./authorization";
 export default {
   Query: {
     message: async (parent, { id }, { models }) => {
-      return await models.Message.findById(id);
+      return await models.Message.findByPk(id);
     },
 
     messages: async (parent, args, { models }) => {
@@ -48,7 +48,7 @@ export default {
 
   Message: {
     user: async (message, args, { models }) => {
-      return await models.User.findById(message.userId);
+      return await models.User.findByPk(message.userId);
     }
   }
 };

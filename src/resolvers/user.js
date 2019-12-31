@@ -15,10 +15,10 @@ export default {
       if (!me) {
         return null;
       }
-      return await models.User.findById(me.id);
+      return await models.User.findByPk(me.id);
     },
     user: async (parent, { id }, { models }) => {
-      return await models.User.findById(id);
+      return await models.User.findByPk(id);
     },
     users: async (parent, args, { models }) => {
       return await models.User.findAll();
