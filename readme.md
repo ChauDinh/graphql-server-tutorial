@@ -44,3 +44,5 @@ What we will cover?
 - Seed your database with data when the application start
 - Add a user model method for retrieving a user by username
 - Learn essentials about psql command line.
+
+# Setting Headers for graphql playground
