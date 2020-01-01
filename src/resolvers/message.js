@@ -1,6 +1,11 @@
 import { combineResolvers } from "graphql-resolvers";
+import Sequelize from "sequelize";
 
 import { isAuthenticated, isMessageOwner } from "./authorization";
+
+const toCursorHash = str => Buffer.from(str).toString("base64");
+
+const fromCursorHash = str => Buffer.from(str, "base64").toString("ascii");
 
 export default {
   Query: {
@@ -8,8 +13,32 @@ export default {
       return await models.Message.findByPk(id);
     },
 
-    messages: async (parent, { offset = 0, limit = 100 }, { models }) => {
-      return await models.Message.findAll({ offset, limit });
+    // messages: async (parent, { offset = 0, limit = 100 }, { models }) => {
+    //   return await models.Message.findAll({ offset, limit });
+    // } - offset/limit pagination
+
+    messages: async (parent, { cursor, limit = 100 }, { models }) => {
+      const cursorOption = cursor
+        ? {
+            where: { createdAt: { [Sequelize.Op.lt]: fromCursorHash(cursor) } }
+          }
+        : {};
+      const messages = await models.Message.findAll({
+        order: [["createdAt", "DESC"]],
+        limit: limit + 1,
+        ...cursorOption
+      });
+
+      const hasNextPage = messages.length > limit;
+      const edges = hasNextPage ? messages.slice(0, -1) : messages;
+
+      return {
+        edges,
+        pageInfo: {
+          hasNextPage,
+          endCursor: toCursorHash(edges[edges.length - 1].createdAt.toString())
+        }
+      };
     }
   },
 
