@@ -13,6 +13,14 @@ export default gql`
     updateMessage(id: ID!, text: String!): Boolean!
   }
 
+  extend type Subscription {
+    messageCreated: MessageCreated!
+  }
+
+  type MessageCreated {
+    message: Message!
+  }
+
   type MessageConnection {
     edges: [Message!]!
     pageInfo: PageInfo!
